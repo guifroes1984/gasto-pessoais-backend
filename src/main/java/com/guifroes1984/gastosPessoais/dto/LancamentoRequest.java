@@ -8,22 +8,22 @@ import jakarta.validation.constraints.NotNull;
 
 public class LancamentoRequest {
 
-	@NotBlank
+	@NotBlank(message = "descricao é obrigatória")
 	private String descricao;
 
-	@NotNull
+	@NotNull(message = "valor é obrigatório")
 	private BigDecimal valor;
 
-	@NotNull
+	@NotNull(message = "tipo é obrigatório")
 	private String tipo;
 
-	@NotNull
+	@NotNull(message = "data é obrigatória")
 	private LocalDate data;
 
-	@NotNull
+	@NotNull(message = "usuarioId é obrigatório")
 	private Long usuarioId;
 
-	@NotNull
+	@NotNull(message = "categoriaId é obrigatório")
 	private Long categoriaId;
 
 	public String getDescricao() {

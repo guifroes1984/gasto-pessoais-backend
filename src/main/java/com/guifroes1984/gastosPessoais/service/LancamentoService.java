@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.guifroes1984.gastosPessoais.dto.LancamentoRequest;
 import com.guifroes1984.gastosPessoais.dto.LancamentoResponse;
 import com.guifroes1984.gastosPessoais.enuns.TipoLancamento;
+import com.guifroes1984.gastosPessoais.exception.RecursoNaoEncontradoException;
 import com.guifroes1984.gastosPessoais.model.Categoria;
 import com.guifroes1984.gastosPessoais.model.Lancamento;
 import com.guifroes1984.gastosPessoais.model.Usuario;
@@ -30,10 +31,10 @@ public class LancamentoService {
 	public LancamentoResponse salvar(LancamentoRequest request) {
 
 		Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
 		Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
-				.orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada"));
 
 		Lancamento lancamento = new Lancamento();
 		lancamento.setDescricao(request.getDescricao());
