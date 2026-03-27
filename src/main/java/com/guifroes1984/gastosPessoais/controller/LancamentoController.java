@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.guifroes1984.gastosPessoais.dto.LancamentoRequest;
+import com.guifroes1984.gastosPessoais.dto.LancamentoResponse;
 import com.guifroes1984.gastosPessoais.model.Lancamento;
 import com.guifroes1984.gastosPessoais.service.LancamentoService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -22,8 +26,8 @@ public class LancamentoController {
     private LancamentoService service;
 
     @PostMapping
-    public ResponseEntity<Lancamento> salvar(@RequestBody Lancamento lancamento) {
-        return ResponseEntity.ok(service.salvar(lancamento));
+    public ResponseEntity<LancamentoResponse> salvar(@RequestBody @Valid LancamentoRequest request) {
+        return ResponseEntity.ok(service.salvar(request));
     }
 
     @GetMapping("/usuario/{id}")
