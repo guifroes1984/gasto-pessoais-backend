@@ -21,4 +21,37 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
 	}
+
+	@ExceptionHandler(CredenciaisInvalidasException.class)
+	public ResponseEntity<ApiError> handleCredenciais(CredenciaisInvalidasException ex) {
+
+		ApiError erro = new ApiError(401, "Credenciais inválidas", ex.getMessage());
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
+	}
+
+	@ExceptionHandler(RecursoNaoEncontradoException.class)
+	public ResponseEntity<ApiError> handleNotFound(RecursoNaoEncontradoException ex) {
+
+		ApiError erro = new ApiError(404, "Recurso não encontrado", ex.getMessage());
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+	}
+
+	@ExceptionHandler(EmailJaCadastradoException.class)
+	public ResponseEntity<ApiError> handleEmailJaCadastrado(EmailJaCadastradoException ex) {
+
+		ApiError erro = new ApiError(400, "Email já cadastrado", ex.getMessage());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ApiError> handleGeral(Exception ex) {
+
+		ApiError erro = new ApiError(500, "Erro interno", "Ocorreu um erro inesperado");
+
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+	}
+
 }

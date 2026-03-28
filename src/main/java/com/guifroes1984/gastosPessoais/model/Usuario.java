@@ -1,5 +1,6 @@
 package com.guifroes1984.gastosPessoais.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +14,8 @@ public class Usuario {
 	private Long id;
 
 	private String nome;
+	
+	@Column(unique = true)
 	private String email;
 	private String senha;
 

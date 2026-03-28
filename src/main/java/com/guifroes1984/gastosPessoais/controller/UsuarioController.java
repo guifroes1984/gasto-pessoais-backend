@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.guifroes1984.gastosPessoais.model.Usuario;
 import com.guifroes1984.gastosPessoais.repository.UsuarioRepository;
+import com.guifroes1984.gastosPessoais.service.UsuarioService;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -19,10 +20,13 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository repository;
+    
+    @Autowired
+    private UsuarioService service;
 
     @PostMapping
     public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(repository.save(usuario));
+        return ResponseEntity.ok(service.salvar(usuario));
     }
 
     @GetMapping
