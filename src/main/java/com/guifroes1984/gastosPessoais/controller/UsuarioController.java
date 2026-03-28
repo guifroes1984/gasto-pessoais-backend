@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.guifroes1984.gastosPessoais.dto.UsuarioResponse;
 import com.guifroes1984.gastosPessoais.model.Usuario;
 import com.guifroes1984.gastosPessoais.repository.UsuarioRepository;
 import com.guifroes1984.gastosPessoais.service.UsuarioService;
@@ -18,19 +19,29 @@ import com.guifroes1984.gastosPessoais.service.UsuarioService;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioRepository repository;
-    
-    @Autowired
-    private UsuarioService service;
+	@Autowired
+	private UsuarioRepository repository;
 
-    @PostMapping
-    public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(service.salvar(usuario));
-    }
+	@Autowired
+	private UsuarioService service;
 
-    @GetMapping
-    public List<Usuario> listar() {
-        return repository.findAll();
-    }
+	@PostMapping
+	public ResponseEntity<UsuarioResponse> salvar(@RequestBody Usuario usuario) {
+		Usuario salvo = service.salvar(usuario);
+		return ResponseEntity.ok(toResponse(salvo));
+	}
+
+	@GetMapping
+	public List<Usuario> listar() {
+		return repository.findAll();
+	}
+
+	private UsuarioResponse toResponse(Usuario usuario) {
+		UsuarioResponse response = new UsuarioResponse();
+		response.setId(usuario.getId());
+		response.setNome(usuario.getNome());
+		response.setEmail(usuario.getEmail());
+		return response;
+	}
+
 }
