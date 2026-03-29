@@ -1,5 +1,7 @@
 package com.guifroes1984.gastosPessoais.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.guifroes1984.gastosPessoais.dto.LancamentoRequest;
 import com.guifroes1984.gastosPessoais.dto.LancamentoResponse;
+import com.guifroes1984.gastosPessoais.dto.ResumoResponse;
 import com.guifroes1984.gastosPessoais.enuns.TipoLancamento;
 import com.guifroes1984.gastosPessoais.exception.RecursoNaoEncontradoException;
 import com.guifroes1984.gastosPessoais.model.Categoria;
@@ -31,10 +34,7 @@ public class LancamentoService {
 
 	public LancamentoResponse salvar(LancamentoRequest request) {
 
-		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-		Usuario usuario = usuarioRepository.findByEmail(email)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+		Usuario usuario = getUsuarioLogado();
 
 		Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
 				.orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada"));
@@ -62,6 +62,47 @@ public class LancamentoService {
 		List<Lancamento> lancamentos = repository.findByUsuario(usuario);
 
 		return lancamentos.stream().map(this::toResponse).toList();
+	}
+
+	public ResumoResponse resumo() {
+
+		Usuario usuario = getUsuarioLogado();
+
+		List<Lancamento> lancamentos = repository.findByUsuario(usuario);
+
+		BigDecimal receitas = lancamentos.stream().filter(l -> l.getTipo() == TipoLancamento.RECEITA)
+				.map(Lancamento::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		BigDecimal despesas = lancamentos.stream().filter(l -> l.getTipo() == TipoLancamento.DESPESA)
+				.map(Lancamento::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		ResumoResponse resumo = new ResumoResponse();
+		resumo.setTotalReceitas(receitas);
+		resumo.setTotalDespesas(despesas);
+		resumo.setSaldo(receitas.subtract(despesas));
+
+		return resumo;
+
+	}
+
+	public List<LancamentoResponse> listarPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
+
+		Usuario usuario = getUsuarioLogado();
+
+		List<Lancamento> lancamentos = repository.findByUsuarioAndDataBetween(usuario, dataInicio, dataFim);
+
+		return lancamentos.stream().map(this::toResponse).toList();
+	}
+	
+	private Usuario getUsuarioLogado() {
+		String email = SecurityContextHolder
+				.getContext()
+				.getAuthentication()
+				.getName();
+		
+		return usuarioRepository.findByEmail(email)
+	            .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+		
 	}
 
 	private LancamentoResponse toResponse(Lancamento lanc) {
