@@ -3,6 +3,7 @@ package com.guifroes1984.gastosPessoais.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.guifroes1984.gastosPessoais.dto.LancamentoRequest;
@@ -29,8 +30,13 @@ public class LancamentoService {
 	private CategoriaRepository categoriaRepository;
 
 	public LancamentoResponse salvar(LancamentoRequest request) {
+		
+		String email = SecurityContextHolder
+				.getContext()
+				.getAuthentication()
+				.getName();
 
-		Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
+		Usuario usuario = usuarioRepository.findByEmail(email)
 				.orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
 		Categoria categoria = categoriaRepository.findById(request.getCategoriaId())

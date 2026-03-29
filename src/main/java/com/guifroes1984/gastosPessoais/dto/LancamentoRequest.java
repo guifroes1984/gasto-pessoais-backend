@@ -20,8 +20,8 @@ public class LancamentoRequest {
 	@NotNull(message = "data é obrigatória")
 	private LocalDate data;
 
-	@NotNull(message = "usuarioId é obrigatório")
-	private Long usuarioId;
+	//@NotNull(message = "usuarioId é obrigatório")
+	//private Long usuarioId;
 
 	@NotNull(message = "categoriaId é obrigatório")
 	private Long categoriaId;
@@ -58,13 +58,13 @@ public class LancamentoRequest {
 		this.data = data;
 	}
 
-	public Long getUsuarioId() {
-		return usuarioId;
-	}
+	//public Long getUsuarioId() {
+	//	return usuarioId;
+	//}
 
-	public void setUsuarioId(Long usuarioId) {
-		this.usuarioId = usuarioId;
-	}
+	//public void setUsuarioId(Long usuarioId) {
+	//	this.usuarioId = usuarioId;
+	//}
 
 	public Long getCategoriaId() {
 		return categoriaId;

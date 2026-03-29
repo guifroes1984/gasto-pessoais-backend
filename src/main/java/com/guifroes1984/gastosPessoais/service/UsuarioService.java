@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.guifroes1984.gastosPessoais.dto.UsuarioResponse;
 import com.guifroes1984.gastosPessoais.exception.EmailJaCadastradoException;
 import com.guifroes1984.gastosPessoais.model.Usuario;
 import com.guifroes1984.gastosPessoais.repository.UsuarioRepository;
