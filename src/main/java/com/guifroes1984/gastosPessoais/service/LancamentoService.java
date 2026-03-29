@@ -30,11 +30,8 @@ public class LancamentoService {
 	private CategoriaRepository categoriaRepository;
 
 	public LancamentoResponse salvar(LancamentoRequest request) {
-		
-		String email = SecurityContextHolder
-				.getContext()
-				.getAuthentication()
-				.getName();
+
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		Usuario usuario = usuarioRepository.findByEmail(email)
 				.orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
@@ -55,8 +52,16 @@ public class LancamentoService {
 		return toResponse(salvo);
 	}
 
-	public List<Lancamento> listarPorUsuario(Long usuarioId) {
-		return repository.findByUsuarioId(usuarioId);
+	public List<LancamentoResponse> listarPorUsuario() {
+
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		Usuario usuario = usuarioRepository.findByEmail(email)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+
+		List<Lancamento> lancamentos = repository.findByUsuario(usuario);
+
+		return lancamentos.stream().map(this::toResponse).toList();
 	}
 
 	private LancamentoResponse toResponse(Lancamento lanc) {

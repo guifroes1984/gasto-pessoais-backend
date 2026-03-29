@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.guifroes1984.gastosPessoais.model.Lancamento;
+import com.guifroes1984.gastosPessoais.model.Usuario;
 
 public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
-	List<Lancamento> findByUsuarioId(Long usuarioId);
+	
+	List<Lancamento> findByUsuario(Usuario usuario);
+	
 }
