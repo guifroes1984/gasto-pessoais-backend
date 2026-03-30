@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.guifroes1984.gastosPessoais.dto.LancamentoRequest;
 import com.guifroes1984.gastosPessoais.dto.LancamentoResponse;
+import com.guifroes1984.gastosPessoais.dto.ResumoCategoriaDTO;
 import com.guifroes1984.gastosPessoais.dto.ResumoResponse;
 import com.guifroes1984.gastosPessoais.enuns.TipoLancamento;
 import com.guifroes1984.gastosPessoais.exception.RecursoNaoEncontradoException;
@@ -92,6 +93,10 @@ public class LancamentoService {
 		List<Lancamento> lancamentos = repository.findByUsuarioAndDataBetween(usuario, dataInicio, dataFim);
 
 		return lancamentos.stream().map(this::toResponse).toList();
+	}
+	
+	public List<ResumoCategoriaDTO> resumoPorCategoria(Long usuarioId) {
+		return repository.resumoPorCategoria(usuarioId, TipoLancamento.DESPESA);
 	}
 	
 	private Usuario getUsuarioLogado() {

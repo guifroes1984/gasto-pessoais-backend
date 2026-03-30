@@ -9,6 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.guifroes1984.gastosPessoais.model.Usuario;
+import com.guifroes1984.gastosPessoais.repository.UsuarioRepository;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +22,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
+    
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -35,6 +41,11 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtUtil.isTokenValido(token)) {
 
                 String email = jwtUtil.extrairEmail(token);
+                
+                Usuario usuario = usuarioRepository.findByEmail(email)
+                		.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                
+                request.setAttribute("usuarioId", usuario.getId());
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
