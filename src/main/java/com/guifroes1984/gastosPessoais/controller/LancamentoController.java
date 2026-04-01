@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.guifroes1984.gastosPessoais.dto.DashboardDTO;
 import com.guifroes1984.gastosPessoais.dto.LancamentoRequest;
 import com.guifroes1984.gastosPessoais.dto.LancamentoResponse;
 import com.guifroes1984.gastosPessoais.dto.ResumoCategoriaDTO;
@@ -49,10 +49,15 @@ public class LancamentoController {
 
 		return ResponseEntity.ok(service.listarPorPeriodo(dataInicio, dataFim));
 	}
-	
+
 	@GetMapping("/resumo/categorias")
-	public ResponseEntity<List<ResumoCategoriaDTO>> resumoPorCategoria(@RequestAttribute("usuarioId") Long usuarioId) {
-		return ResponseEntity.ok(service.resumoPorCategoria(usuarioId));
+	public ResponseEntity<List<ResumoCategoriaDTO>> resumoPorCategoria(@RequestParam LocalDate inicio, @RequestParam LocalDate fim) {
+		return ResponseEntity.ok(service.resumoPorCategoria(inicio, fim));
 	}
 
+	@GetMapping("/dashboard")
+	public ResponseEntity<DashboardDTO> dashboard(@RequestParam LocalDate inicio, @RequestParam LocalDate fim) {
+
+		return ResponseEntity.ok(service.dashboard(inicio, fim));
+	}
 }

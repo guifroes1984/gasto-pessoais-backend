@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.guifroes1984.gastosPessoais.dto.DashboardDTO;
 import com.guifroes1984.gastosPessoais.dto.LancamentoRequest;
 import com.guifroes1984.gastosPessoais.dto.LancamentoResponse;
 import com.guifroes1984.gastosPessoais.dto.ResumoCategoriaDTO;
@@ -94,20 +95,39 @@ public class LancamentoService {
 
 		return lancamentos.stream().map(this::toResponse).toList();
 	}
-	
-	public List<ResumoCategoriaDTO> resumoPorCategoria(Long usuarioId) {
-		return repository.resumoPorCategoria(usuarioId, TipoLancamento.DESPESA);
+
+	public List<ResumoCategoriaDTO> resumoPorCategoria(LocalDate inicio, LocalDate fim) {
+		Usuario usuario = getUsuarioLogado();
+
+		return repository.resumoPorCategoria(usuario.getId(), TipoLancamento.DESPESA, inicio, fim);
 	}
-	
+
+	public DashboardDTO dashboard(LocalDate inicio, LocalDate fim) {
+
+		Usuario usuario = getUsuarioLogado();
+
+		BigDecimal receitas = repository.somarPorTipo(usuario.getId(), TipoLancamento.RECEITA, inicio, fim);
+
+		BigDecimal despesas = repository.somarPorTipo(usuario.getId(), TipoLancamento.DESPESA, inicio, fim);
+
+		List<ResumoCategoriaDTO> categorias = repository.resumoPorCategoria(usuario.getId(), TipoLancamento.DESPESA,
+				inicio, fim);
+
+		DashboardDTO dto = new DashboardDTO();
+		dto.setTotalReceitas(receitas);
+		dto.setTotalDespesas(despesas);
+		dto.setSaldo(receitas.subtract(despesas));
+		dto.setDespesasPorCategoria(categorias);
+
+		return dto;
+	}
+
 	private Usuario getUsuarioLogado() {
-		String email = SecurityContextHolder
-				.getContext()
-				.getAuthentication()
-				.getName();
-		
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
 		return usuarioRepository.findByEmail(email)
-	            .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
-		
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+
 	}
 
 	private LancamentoResponse toResponse(Lancamento lanc) {
