@@ -66,6 +66,47 @@ public class LancamentoService {
 		return lancamentos.stream().map(this::toResponse).toList();
 	}
 
+	public LancamentoResponse atualizar(Long id, LancamentoRequest request) {
+
+		Usuario usuario = getUsuarioLogado();
+
+		Lancamento lancamento = repository.findById(id)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Lancamento não encontrado"));
+
+		if (!lancamento.getUsuario().getId().equals(usuario.getId())) {
+			throw new RuntimeException("Acesso negado");
+		}
+
+		Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada"));
+
+		lancamento.setDescricao(request.getDescricao());
+		lancamento.setValor(request.getValor());
+		lancamento.setTipo(TipoLancamento.valueOf(request.getTipo()));
+		lancamento.setData(request.getData());
+		lancamento.setCategoria(categoria);
+
+		Lancamento atualizado = repository.save(lancamento);
+
+		return toResponse(atualizado);
+
+	}
+
+	public void deletar(Long id) {
+
+		Usuario usuario = getUsuarioLogado();
+
+		Lancamento lancamento = repository.findById(id)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Lançamento não encontrado"));
+
+		if (!lancamento.getUsuario().getId().equals(usuario.getId())) {
+			throw new RuntimeException("Acesso negado");
+		}
+
+		repository.delete(lancamento);
+
+	}
+
 	public ResumoResponse resumo() {
 
 		Usuario usuario = getUsuarioLogado();
