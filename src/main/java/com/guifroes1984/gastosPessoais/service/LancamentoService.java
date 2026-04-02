@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -161,6 +163,23 @@ public class LancamentoService {
 		dto.setDespesasPorCategoria(categorias);
 
 		return dto;
+	}
+
+	public Page<LancamentoResponse> listarComFiltro(TipoLancamento tipo, LocalDate inicio, LocalDate fim,
+			Pageable pageable) {
+
+		Usuario usuario = getUsuarioLogado();
+
+		Page<Lancamento> page;
+
+		if (tipo != null && inicio != null && fim != null) {
+			page = repository.findByUsuarioAndTipoAndDataBetween(usuario, tipo, inicio, fim, pageable);
+		} else {
+			page = repository.findByUsuario(usuario, pageable);
+		}
+
+		return page.map(this::toResponse);
+
 	}
 
 	private Usuario getUsuarioLogado() {

@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import com.guifroes1984.gastosPessoais.dto.LancamentoRequest;
 import com.guifroes1984.gastosPessoais.dto.LancamentoResponse;
 import com.guifroes1984.gastosPessoais.dto.ResumoCategoriaDTO;
 import com.guifroes1984.gastosPessoais.dto.ResumoResponse;
+import com.guifroes1984.gastosPessoais.enuns.TipoLancamento;
 import com.guifroes1984.gastosPessoais.service.LancamentoService;
 
 import jakarta.validation.Valid;
@@ -79,4 +83,15 @@ public class LancamentoController {
 
 		return ResponseEntity.ok(service.dashboard(inicio, fim));
 	}
+
+	@GetMapping("/filtro")
+	public ResponseEntity<Page<LancamentoResponse>> listarComFiltro(@RequestParam(required = false) TipoLancamento tipo,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim,
+			Pageable pageable) {
+		
+		return ResponseEntity.ok(service.listarComFiltro(tipo, inicio, fim, pageable));
+
+	}
+
 }
