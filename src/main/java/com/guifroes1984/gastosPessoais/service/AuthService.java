@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.guifroes1984.gastosPessoais.dto.LoginRequest;
 import com.guifroes1984.gastosPessoais.exception.CredenciaisInvalidasException;
 import com.guifroes1984.gastosPessoais.exception.RecursoNaoEncontradoException;
 import com.guifroes1984.gastosPessoais.model.Usuario;
@@ -22,16 +23,16 @@ public class AuthService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
-	public String login(String email, String senha) {
+	public String login(LoginRequest request) {
 		
-		Usuario usuario = usuarioRepository.findByEmail(email)
+		Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
 				.orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 		
-		if (!passwordEncoder.matches(senha, usuario.getSenha())) {
-			throw new CredenciaisInvalidasException("Email ou senha inválidos");
+		if (!passwordEncoder.matches(request.getSenha(), usuario.getSenha())) {
+			throw new CredenciaisInvalidasException("Senha inválida");
 		}
 		
-		return jwtUtil.gerarToken(email);
+		return jwtUtil.gerarToken(usuario);
 		
 	}
 

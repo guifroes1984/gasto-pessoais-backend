@@ -1,5 +1,11 @@
 package com.guifroes1984.gastosPessoais.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.guifroes1984.gastosPessoais.enuns.Role;
+import com.guifroes1984.gastosPessoais.model.base.Auditable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,7 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Usuario {
+public class Usuario extends Auditable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +24,16 @@ public class Usuario {
 	@Column(unique = true)
 	private String email;
 	private String senha;
+	
+	private Set<Role> roles = new HashSet<>();
+	
+	public Set<Role> getRoles() {
+		return roles;
+	}
+	
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 
 	public Long getId() {
 		return id;

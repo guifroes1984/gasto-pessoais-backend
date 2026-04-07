@@ -2,9 +2,14 @@ package com.guifroes1984.gastosPessoais.security;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.guifroes1984.gastosPessoais.model.Usuario;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -18,14 +23,27 @@ public class JwtUtil {
 		return Keys.hmacShaKeyFor(SECRET.getBytes());
 	}
 	
-	public String gerarToken(String email) {
+	public String gerarToken(Usuario usuario) {
+		
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("roles", usuario.getRoles());
+		
         return Jwts.builder()
-            .setSubject(email)
+        	.setClaims(claims)
+            .setSubject(usuario.getEmail())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
             .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
             .compact();
     }
+	
+	public Claims extrairClaims(String token) {
+		return Jwts.parserBuilder()
+				.setSigningKey(getChave())
+				.build()
+				.parseClaimsJwt(token)
+				.getBody();
+	}
 	
 	public String extrairEmail(String token) {
         return Jwts.parserBuilder()

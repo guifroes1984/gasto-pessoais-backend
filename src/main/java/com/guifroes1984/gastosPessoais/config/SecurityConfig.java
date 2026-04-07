@@ -23,6 +23,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/auth/login", "/usuarios").permitAll()
             .anyRequest().authenticated()
+            
         )
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

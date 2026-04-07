@@ -1,9 +1,12 @@
 package com.guifroes1984.gastosPessoais.service;
 
+import java.util.HashSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.guifroes1984.gastosPessoais.enuns.Role;
 import com.guifroes1984.gastosPessoais.exception.EmailJaCadastradoException;
 import com.guifroes1984.gastosPessoais.model.Usuario;
 import com.guifroes1984.gastosPessoais.repository.UsuarioRepository;
@@ -24,6 +27,11 @@ public class UsuarioService {
 		}
 
 		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+		
+		if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
+			usuario.setRoles(new HashSet<>());
+			usuario.getRoles().add(Role.ROLE_USER);
+		}
 
 		return repository.save(usuario);
 	}
