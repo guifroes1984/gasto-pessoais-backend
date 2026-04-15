@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.guifroes1984.gastosPessoais.dto.UsuarioResponse;
+import com.guifroes1984.gastosPessoais.enuns.Role;
 import com.guifroes1984.gastosPessoais.model.Usuario;
 import com.guifroes1984.gastosPessoais.repository.UsuarioRepository;
 import com.guifroes1984.gastosPessoais.service.UsuarioService;
@@ -32,8 +33,8 @@ public class UsuarioController {
 	}
 
 	@GetMapping
-	public List<Usuario> listar() {
-		return repository.findAll();
+	public ResponseEntity<List<UsuarioResponse>> listar() {
+		return ResponseEntity.ok(repository.findAll().stream().map(this::toResponse).toList());
 	}
 
 	private UsuarioResponse toResponse(Usuario usuario) {
@@ -41,6 +42,11 @@ public class UsuarioController {
 		response.setId(usuario.getId());
 		response.setNome(usuario.getNome());
 		response.setEmail(usuario.getEmail());
+		if (usuario.getRoles() != null) {
+			List<String> roles = usuario.getRoles().stream().map(Role::name).toList();
+
+			response.setRoles(roles);
+		}
 		return response;
 	}
 

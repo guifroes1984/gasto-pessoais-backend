@@ -1,10 +1,24 @@
 package com.guifroes1984.gastosPessoais.dto;
 
+import java.util.List;
+
 public class UsuarioResponse {
 
 	private Long id;
 	private String nome;
 	private String email;
+	private List<String> roles;
+
+	public UsuarioResponse() {
+	}
+
+	public UsuarioResponse(Long id, String nome, String email, List<String> roles) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+		this.roles = roles;
+	}
 
 	public Long getId() {
 		return id;
@@ -28,6 +42,14 @@ public class UsuarioResponse {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 
 }
