@@ -56,16 +56,16 @@ public class LancamentoService {
 		return toResponse(salvo);
 	}
 
-	public List<LancamentoResponse> listarPorUsuario() {
+	public Page<LancamentoResponse> listarPorUsuario(Pageable pageable) {
 
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
 		Usuario usuario = usuarioRepository.findByEmail(email)
 				.orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
 
-		List<Lancamento> lancamentos = repository.findByUsuario(usuario);
+		Page<Lancamento> pagina = repository.findByUsuario(usuario, pageable);
 
-		return lancamentos.stream().map(this::toResponse).toList();
+		return pagina.map(this::toResponse);
 	}
 
 	public LancamentoResponse atualizar(Long id, LancamentoRequest request) {

@@ -41,8 +41,8 @@ public class LancamentoController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<LancamentoResponse>> listarTodos() {
-		return ResponseEntity.ok(service.listarPorUsuario());
+	public ResponseEntity<Page<LancamentoResponse>> listarTodos(Pageable pageable) {
+	    return ResponseEntity.ok(service.listarPorUsuario(pageable));
 	}
 
 	@PutMapping("/{id}")
