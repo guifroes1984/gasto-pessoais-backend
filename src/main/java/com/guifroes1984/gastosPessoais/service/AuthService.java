@@ -11,6 +11,7 @@ import com.guifroes1984.gastosPessoais.dto.LoginRequest;
 import com.guifroes1984.gastosPessoais.dto.LoginResponse;
 import com.guifroes1984.gastosPessoais.exception.CredenciaisInvalidasException;
 import com.guifroes1984.gastosPessoais.exception.RecursoNaoEncontradoException;
+import com.guifroes1984.gastosPessoais.exception.RefreshTokenInvalidoException;
 import com.guifroes1984.gastosPessoais.model.RefreshToken;
 import com.guifroes1984.gastosPessoais.model.Usuario;
 import com.guifroes1984.gastosPessoais.repository.RefreshTokenRepository;
@@ -65,10 +66,10 @@ public class AuthService {
 	public LoginResponse refresh(String token) {
 
 		RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
-				.orElseThrow(() -> new RuntimeException("Refresh token inválido"));
+				.orElseThrow(() -> new RefreshTokenInvalidoException("Refresh token inválido"));
 
 		if (refreshToken.getExpiracao().isBefore(LocalDateTime.now())) {
-			throw new RuntimeException("Refresh token expirado");
+			throw new RefreshTokenInvalidoException("Refresh token expirado");
 		}
 
 		Usuario usuario = refreshToken.getUsuario();
