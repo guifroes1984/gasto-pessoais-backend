@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.guifroes1984.gastosPessoais.dto.LoginRequest;
 import com.guifroes1984.gastosPessoais.dto.LoginResponse;
+import com.guifroes1984.gastosPessoais.dto.RefreshTokenRequest;
 import com.guifroes1984.gastosPessoais.service.AuthService;
 
 @RestController
@@ -20,10 +21,12 @@ public class AuthController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-		
-		String token = authService.login(request);
-		
-		return ResponseEntity.ok(new LoginResponse(token));
+		return ResponseEntity.ok(authService.login(request));
+	}
+	
+	@PostMapping("/refresh")
+	public ResponseEntity<LoginResponse> refresh(@RequestBody RefreshTokenRequest request) {
+		return ResponseEntity.ok(authService.refresh(request.getRefreshToken()));
 	}
 
 }
