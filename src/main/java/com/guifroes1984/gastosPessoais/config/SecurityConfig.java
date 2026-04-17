@@ -12,23 +12,20 @@ import com.guifroes1984.gastosPessoais.security.JwtFilter;
 
 @Configuration
 public class SecurityConfig {
-	
+
 	@Autowired
 	private JwtFilter jwtFilter;
-	
-	@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
-        		.requestMatchers("/auth/login", "/auth/refresh", "/usuarios").permitAll()
-            .anyRequest().authenticated()
-            
-        )
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-    }
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable())
+				.authorizeHttpRequests(
+						auth -> auth.requestMatchers("/auth/login", "/auth/refresh", "/usuarios", "/v3/api-docs/**",
+								"/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated()
+				).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+	}
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
