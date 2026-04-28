@@ -53,6 +53,13 @@ public class LancamentoController {
 	public ResponseEntity<Page<LancamentoResponse>> listarTodos(Pageable pageable) {
 		return ResponseEntity.ok(service.listarPorUsuario(pageable));
 	}
+	
+	@Operation(summary = "Buscar lançamento por ID")
+	@ApiResponse(responseCode = "200", description = "Lançamento encontrado")
+	@GetMapping("/{id}")
+	public ResponseEntity<LancamentoResponse> buscarPorId(@PathVariable Long id) {
+		return ResponseEntity.ok(service.buscarPorId(id));
+	}
 
 	@Operation(summary = "Atualizar lançamento")
 	@ApiResponse(responseCode = "200", description = "Lançamento atualizado")

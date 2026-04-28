@@ -67,6 +67,22 @@ public class LancamentoService {
 
 		return pagina.map(this::toResponse);
 	}
+	
+	public LancamentoResponse buscarPorId(Long id) {
+		Lancamento lancamento = repository.findById(id)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Lançamento não encontrado"));
+		
+		LancamentoResponse response = new LancamentoResponse();
+		
+		response.setId(lancamento.getId());
+		response.setDescricao(lancamento.getDescricao());
+	    response.setValor(lancamento.getValor());
+	    response.setTipo(lancamento.getTipo().name());
+	    response.setData(lancamento.getData());
+	    response.setCategoriaId(lancamento.getCategoria().getId());
+		
+		return response;
+	}
 
 	public LancamentoResponse atualizar(Long id, LancamentoRequest request) {
 
@@ -197,7 +213,7 @@ public class LancamentoService {
 		response.setValor(lanc.getValor());
 		response.setTipo(lanc.getTipo().name());
 		response.setData(lanc.getData());
-		response.setCategoria(lanc.getCategoria().getNome());
+		//response.setCategoria(lanc.getCategoria().getNome());
 		return response;
 	}
 }

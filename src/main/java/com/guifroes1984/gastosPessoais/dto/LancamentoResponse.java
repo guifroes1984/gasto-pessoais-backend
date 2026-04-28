@@ -4,14 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class LancamentoResponse {
-	
-	private Long id;
-    private String descricao;
-    private BigDecimal valor;
-    private String tipo;
-    private LocalDate data;
 
-    private String categoria;
+	private Long id;
+	private String descricao;
+	private BigDecimal valor;
+	private String tipo;
+	private LocalDate data;
+	private Long categoriaId;
 
 	public Long getId() {
 		return id;
@@ -53,14 +52,12 @@ public class LancamentoResponse {
 		this.data = data;
 	}
 
-	public String getCategoria() {
-		return categoria;
+	public void setCategoriaId(Long categoriaId) {
+		this.categoriaId = categoriaId;
 	}
 
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
+	public Long getCategoriaId() {
+		return categoriaId;
 	}
-    
-    
 
 }
