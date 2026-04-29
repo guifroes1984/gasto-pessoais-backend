@@ -25,7 +25,11 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
 
 	Page<Lancamento> findByUsuarioAndTipoAndDataBetween(Usuario usuario, TipoLancamento tipo, LocalDate inicio,
 			LocalDate fim, Pageable pageable);
-	
+
+	Page<Lancamento> findByUsuarioAndTipo(Usuario usuario, TipoLancamento tipo, Pageable pageable);
+
+	Page<Lancamento> findByUsuarioAndDataBetween(Usuario usuario, LocalDate inicio, LocalDate fim, Pageable pageable);
+
 	Optional<Lancamento> findByIdAndUsuario(Long id, Usuario usuario);
 
 	@Query("""

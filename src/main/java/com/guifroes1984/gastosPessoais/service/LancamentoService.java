@@ -67,20 +67,20 @@ public class LancamentoService {
 
 		return pagina.map(this::toResponse);
 	}
-	
+
 	public LancamentoResponse buscarPorId(Long id) {
 		Lancamento lancamento = repository.findById(id)
 				.orElseThrow(() -> new RecursoNaoEncontradoException("Lançamento não encontrado"));
-		
+
 		LancamentoResponse response = new LancamentoResponse();
-		
+
 		response.setId(lancamento.getId());
 		response.setDescricao(lancamento.getDescricao());
-	    response.setValor(lancamento.getValor());
-	    response.setTipo(lancamento.getTipo().name());
-	    response.setData(lancamento.getData());
-	    response.setCategoriaId(lancamento.getCategoria().getId());
-		
+		response.setValor(lancamento.getValor());
+		response.setTipo(lancamento.getTipo().name());
+		response.setData(lancamento.getData());
+		response.setCategoriaId(lancamento.getCategoria().getId());
+
 		return response;
 	}
 
@@ -190,12 +190,18 @@ public class LancamentoService {
 
 		if (tipo != null && inicio != null && fim != null) {
 			page = repository.findByUsuarioAndTipoAndDataBetween(usuario, tipo, inicio, fim, pageable);
+
+		} else if (tipo != null) {
+			page = repository.findByUsuarioAndTipo(usuario, tipo, pageable);
+
+		} else if (inicio != null && fim != null) {
+			page = repository.findByUsuarioAndDataBetween(usuario, inicio, fim, pageable);
+
 		} else {
 			page = repository.findByUsuario(usuario, pageable);
 		}
 
 		return page.map(this::toResponse);
-
 	}
 
 	private Usuario getUsuarioLogado() {
@@ -213,7 +219,7 @@ public class LancamentoService {
 		response.setValor(lanc.getValor());
 		response.setTipo(lanc.getTipo().name());
 		response.setData(lanc.getData());
-		//response.setCategoria(lanc.getCategoria().getNome());
+		// response.setCategoria(lanc.getCategoria().getNome());
 		return response;
 	}
 }
