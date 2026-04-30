@@ -62,4 +62,12 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
 	}
 
+	@ExceptionHandler(CategoriaJaExisteException.class)
+	public ResponseEntity<ApiError> handleCategoriaDuplicada(CategoriaJaExisteException ex) {
+
+		ApiError erro = new ApiError(HttpStatus.BAD_REQUEST.value(), "Categoria já cadastrada", ex.getMessage());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+	}
+
 }
